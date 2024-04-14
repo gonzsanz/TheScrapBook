@@ -65,9 +65,14 @@ button {
     border: none;
     border-radius: 5px;
 }
+
 button:hover {
     background-color: #006400;
     cursor: pointer;
+}
+
+::placeholder {
+    font-style: italic;
 }
 
 @media screen and (width <=600px) {

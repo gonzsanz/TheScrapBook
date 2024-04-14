@@ -36,8 +36,9 @@ export default {
     },
     methods: {
         async loadBooks() {
+            const url = import.meta.env.VITE_API_URL;
             try {
-                const response = await fetch(`https://scrapbook.zeabur.app/search?q=${this.searchQuery}`);
+                const response = await fetch(url + `/search?q=${this.searchQuery}`);
                 if (!response.ok) {
                     throw new Error('Error al cargar los libros');
                 }

@@ -64,7 +64,8 @@ export default {
     },
     methods: {
         async getBookInfo() {
-            const URL_BOOK = `https://scrapbook.zeabur.app/download?id=${this.bookId}`;
+            const url = import.meta.env.VITE_API_URL;
+            const URL_BOOK = url + `/download?id=${this.bookId}`;
             await fetch(URL_BOOK)
                 .then((response) => response.json())
                 .then((book) => {

@@ -6,7 +6,9 @@
             </router-link>
         </div>
         <div class="text">
-            BIBLIOFAKE
+            <router-link to="/">
+                <span>ScrapBook</span>
+            </router-link>
         </div>
     </header>
 </template>
@@ -32,11 +34,12 @@ img {
     height: auto;
 }
 
-.text {
+.text>* {
     margin-right: 1rem;
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
     font-style: italic;
+    text-decoration: none;
 }
 </style>
