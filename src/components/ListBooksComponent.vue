@@ -102,7 +102,7 @@ export default {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-
+    padding: 1rem;
 }
 
 .pagination button {
