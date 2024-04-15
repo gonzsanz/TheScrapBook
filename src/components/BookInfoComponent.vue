@@ -24,9 +24,9 @@
                         </li>
                     </ul>
                 </div>
-                <div class="urls">
+                <div>
                     <h4>Enlaces de descarga</h4>
-                    <div>
+                    <div class="urls">
                         <button v-for="(item, index) in slowLinks" :key="index">
 
                             <a :href="item.url" target="_blank"><span class="option">Opción {{ index + 1 }}</span></a>
@@ -96,7 +96,7 @@ export default {
     },
     computed: {
         slowLinks() {
-            return this.urls.filter(link => link.title.toLowerCase().includes('slow'));
+            return this.urls.filter(link => !link.title.toLowerCase().includes('fast'));
         }
     },
     mounted() {
@@ -155,6 +155,10 @@ button {
     background-color: #008000;
 }
 
+.urls>* {
+    margin-top: 1rem;
+}
+
 /* Media query para dispositivos con un ancho máximo de 600px (generalmente dispositivos móviles) */
 @media screen and (width <=600px) {
 
@@ -170,5 +174,6 @@ button {
         margin-right: 0;
         margin-bottom: 0.5rem;
     }
+
 }
 </style>
