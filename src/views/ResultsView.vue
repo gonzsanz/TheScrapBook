@@ -13,6 +13,7 @@ export default {
     components: {
         ListBooksComponent,
         SearchComponentVue,
+
     },
     data() {
         return {
@@ -28,5 +29,6 @@ export default {
 <style scoped>
 .container {
     padding: 0.5rem;
+    margin: 0 auto;
 }
 </style>
