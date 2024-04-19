@@ -1,14 +1,20 @@
 <template>
     <div class="container">
         <div class="info">
-            <img :src="thumbnail ? thumbnail : '/default_image.jpg'" alt="Imagen libro" class="bookImage"
-                @error="handleImageError">
+            <div class="image">
+                <img :src="thumbnail ? thumbnail : '/default_image.jpg'" alt="Imagen libro" class="bookImage"
+                    @error="handleImageError">
+            </div>
             <div class="book-data">
                 <div class="title">{{ title.toUpperCase() }}</div>
                 <div class="authors">{{ authors }}, {{ publish_date }}</div>
+                <span><strong>Sinopsis de: {{ title }}</strong></span><br>
                 <div class="description">
-                    <span><strong>Sinopsis de: {{ title }}</strong></span><br>
                     {{ getCleanDescription(description) }}
+                </div>
+                <div class="read-more">
+                    <button v-if="description.length > 200" class="btn-read-more"
+                        @click="toggleDescription">{{ showFullDescription ? 'Leer menos' : 'Leer más' }}</button>
                 </div>
                 <div class="more_info">
                     <strong><span class="tecnic">Ficha técnica</span></strong>
@@ -27,10 +33,9 @@
                 <div>
                     <h4>Enlaces de descarga</h4>
                     <div class="urls">
-                        <button v-for="(item, index) in slowLinks" :key="index">
-
+                        <Button v-for="(item, index) in slowLinks" :key="index">
                             <a :href="item.url" target="_blank"><span class="option">Opción {{ index + 1 }}</span></a>
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -59,7 +64,8 @@ export default {
             thumbnail: '',
             publisher: '',
             publish_date: '',
-            errorOccurred: false
+            errorOccurred: false,
+            showFullDescription: false
         };
     },
     methods: {
@@ -80,9 +86,17 @@ export default {
                 })
         },
         getCleanDescription(description) {
+            const cleanedDescription = this.cleanDescription(description);
+
+            return this.showFullDescription ? cleanedDescription : (cleanedDescription.length > 200 ? cleanedDescription.substring(0, 200) + '...' : cleanedDescription);
+        },
+        cleanDescription(description) {
             const regex = /“([^”]*)”/;
-            const firstMatch = this.description.match(regex);
+            const firstMatch = description.match(regex);
             return firstMatch ? firstMatch[1] : 'Sin sinopsis todavía';
+        },
+        toggleDescription() {
+            this.showFullDescription = !this.showFullDescription;
         },
         handleImageError(event) {
             // Verificar si ya ha ocurrido un error de carga de imagen
@@ -108,6 +122,37 @@ export default {
 <style scoped>
 .container {
     margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info {
+    background-color: var(--green-200);
+    margin: 2rem;
+    padding: 1rem;
+}
+
+.book-data {
+    flex-grow: 1;
+}
+
+.read-more {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-read-more {
+    background: none;
+    border: none;
+    color: #000;
+    text-decoration: underline;
+    cursor: pointer;
+    justify-content: center;
+}
+
+.btn-read-more:hover {
+    background: none;
 }
 
 .info {
@@ -116,10 +161,8 @@ export default {
 
 img {
     max-width: 100vw;
-    min-width: auto;
     height: auto;
     margin-right: 1rem;
-    object-fit: cover;
 }
 
 .title {
@@ -135,6 +178,7 @@ img {
 
 .description {
     text-align: justify;
+
 }
 
 .more_info {
@@ -145,18 +189,25 @@ a {
     text-decoration: none;
     color: whitesmoke;
     font-weight: bold;
+
 }
 
 button {
     margin-right: 1rem;
-    padding: 0.6rem;
+    /* padding: 0.6rem; */
     border-radius: 10px;
-    border: 1px solid black;
-    background-color: #008000;
+    /* border: 1px solid black; */
+    background-color: var(--green-600);
+
+}
+
+button:hover {
+    background-color: var(--green-700);
 }
 
 .urls>* {
     margin-top: 1rem;
+
 }
 
 /* Media query para dispositivos con un ancho máximo de 600px (generalmente dispositivos móviles) */

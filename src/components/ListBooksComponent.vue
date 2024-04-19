@@ -1,37 +1,47 @@
 <template>
     <div class="list-books">
+        <div v-if="showNoResults" class="no-results">
+            No se han encontrado resultados para "{{ searchQuery }}"
+        </div>
         <BookResultComponent v-for="book in paginatedFilteredBooks" :key="book.id" :id="String(book.id)"
             :title="String(book.title)" :authors="String(book.authors)" :thumbnail="String(book.thumbnail)"
             :publisher="String(book.publisher)" :publish_date="String(book.publish_date)"
             :file_info="Object(book.file_info)" />
+
         <!-- Controles de paginación -->
-        <div class="pagination">
-            <button @click="prevPage" :disabled="currentPage === 1"><i class="material-icons">arrow_back_ios</i></button>
+        <div class="pagination" v-if="books.length !== 0">
+            <Button @click="prevPage" :disabled="currentPage === 1"><i class="material-icons">arrow_back_ios</i></Button>
             <span>{{ currentPage }} de {{ totalPages }}</span>
-            <button @click="nextPage" :disabled="currentPage === totalPages"><i
-                    class="material-icons">arrow_forward_ios</i></button>
+            <Button @click="nextPage" :disabled="currentPage === totalPages"><i
+                    class="material-icons">arrow_forward_ios</i></Button>
         </div>
+
     </div>
 </template>
 
 <script>
 import BookResultComponent from './BookResultComponent.vue';
+import FilterComponent from './FilterComponent.vue';
 
 export default {
 
     name: 'ListBookComponent',
     props: {
         searchQuery: String,
-        required: true
+        required: true,
     },
     components: {
         BookResultComponent,
+        FilterComponent
     },
     data() {
         return {
+            languages: [],
+            validExtensions: ["epub", "mobi", "pdf", "rtf"],
             books: [],
             currentPage: 1,
-            perPage: 10 // Número de libros por página
+            perPage: 10, // Número de libros por página
+            showNoResults: false
         }
     },
     methods: {
@@ -52,11 +62,15 @@ export default {
                     publisher: book.publisher,
                     publish_date: book.publish_date ? book.publish_date : 'Sin fecha',
                 }));
+                if (this.books.length === 0) {
+                    this.showNoResults = true;
+                }
             } catch (error) {
                 console.error('Error al cargar los libros:', error.message);
                 // Manejar el error según sea necesario
             }
         },
+
         prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
@@ -69,19 +83,37 @@ export default {
                 window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll hacia arriba
             }
         },
+        getLanguages() {
+            // Método para obtener todos los lenguajes de los libros
+            const languages = new Set();
+            this.filteredBooks.forEach(book => {
+                if (book.file_info.language !== null) {
+                    languages.add(book.file_info.language);
+                }
+            });
+            return Array.from(languages);
+        },
+
+        storeLanguages() {
+            const languages = this.getLanguages();
+            localStorage.setItem('languages', JSON.stringify(languages));
+        }
+
 
     },
     async mounted() {
         await this.loadBooks();
+        // this.languages = this.getLanguages();
+        this.storeLanguages();
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.filteredBooks.length / this.perPage);
+            return Math.ceil(this.getBooksWithFiltersApplied.length / this.perPage);
         },
         filteredBooks() {
-            const keyWords = ["epub", "mobi", "pdf", "rtf"];
+
             return this.books.filter(extension => {
-                return keyWords.some(keyWord => {
+                return this.validExtensions.some(keyWord => {
                     return extension.file_info.extension.toLowerCase().includes(keyWord);
                 });
             });
@@ -89,8 +121,35 @@ export default {
         paginatedFilteredBooks() {
             const startIndex = (this.currentPage - 1) * this.perPage;
             const endIndex = startIndex + this.perPage;
-            return this.filteredBooks.slice(startIndex, endIndex);
+            return this.getBooksWithFiltersApplied.slice(startIndex, endIndex);
+        },
+        getBooksWithFiltersApplied() {
+            let books = this.filteredBooks;
+            const languageFilter = localStorage.getItem('languageFilter');
+            const extensionFilter = localStorage.getItem('extensionFilter');
+
+            // Filtrar por idiomas si el filtro está presente en localStorage
+            if (languageFilter) {
+                const selectedLanguages = JSON.parse(languageFilter);
+                books = books.filter(book => {
+                    return selectedLanguages.includes(book.file_info.language);
+                });
+            }
+
+            // Filtrar por extensiones si el filtro está presente en localStorage
+            if (extensionFilter) {
+                const selectedExtensions = JSON.parse(extensionFilter);
+                books = books.filter(book => {
+                    // Eliminar el punto al comparar las extensiones
+                    const extension = book.file_info.extension.toLowerCase();
+                    return selectedExtensions.includes(extension.substring(1)); // Eliminar el punto al inicio
+                });
+            }
+
+            return books;
         }
+
+
     }
 }
 </script>
@@ -113,7 +172,7 @@ export default {
     background: none;
     border: none;
     outline: none;
-    color: #006400;
+    color: var(--green-600);
 }
 
 .pagination button:hover {
@@ -123,6 +182,15 @@ export default {
 
 .pagination button:disabled {
     color: #808080;
+}
+
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 </style>
 
