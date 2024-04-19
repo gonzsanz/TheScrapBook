@@ -1,17 +1,19 @@
 <template>
     <div class="card flex justify-content-center">
-        <Button class="filter-button" @click="visible = true, this.loadSavedCategories();"> <i class="material-icons">tune</i></Button>
+        <Button class="filter-button" @click="visible = true, this.loadSavedCategories();"> <i
+                class="material-icons">tune</i></Button>
         <Dialog v-model:visible="visible" modal header="Aplicar filtros" :style="{ width: '50vw' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <div class="card flex justify-content-center">
                 <div class="flex flex-column gap-3">
                     <p><strong>Idiomas </strong></p>
-                    <div v-for="language in languages" :key="language" class="flex align-items-center checkbox">
+                    <div v-for=" language  in  languages " :key="language" class="flex align-items-center checkbox">
                         <Checkbox v-model="languageFilter" :inputId="language" name="category" :value="language" />
                         <label :for="language">{{ extractLanguageName(language) }}</label>
                     </div>
                     <p><strong>Formato de libro</strong></p>
-                    <div v-for="extension in validExtensions" :key="extension" class="flex align-items-center checkbox">
+                    <div v-for=" extension  in  validExtensions " :key="extension"
+                        class="flex align-items-center checkbox">
                         <Checkbox v-model="extensionFilter" :inputId="extension" name="category" :value="extension" />
                         <label :for="extension">{{ extension }}</label>
                     </div>

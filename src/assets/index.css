@@ -2,7 +2,7 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     position: relative;
-    min-height: 91.8vh;
+    min-height: 100vh;
     padding-bottom: 3rem;
-    background-color: #d9f6e2;
+    background-color: #dff6df;
 }

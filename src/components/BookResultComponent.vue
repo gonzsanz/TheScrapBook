@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <hr />
         <div class="card">
             <img :src="thumbnail ? thumbnail : defaultImage" :alt="title" @error="handleImageError">
             <div class="book">
@@ -21,9 +22,9 @@
                     </div>
                 </div>
                 <div class="download">
-                    <button @click="goViewResult">
+                    <Button @click="goViewResult">
                         <strong>Descargar</strong><i class="material-icons">download</i>
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>
@@ -81,10 +82,15 @@ export default {
 .card {
     display: flex;
     flex-direction: row;
-    border: 1.5px solid green;
+    /* border: 1.5px solid green; */
     border-radius: 5px;
-    margin-bottom: 7px;
-    background-color: #d3e8c7;
+    /* margin-bottom: 7px; */
+    /* background-color: var(--primary-50); */
+}
+
+hr {
+    border: 1px solid var(--green-500);
+
 }
 
 .book {
@@ -128,19 +134,21 @@ img {
     margin-right: 2rem;
     border-radius: 25px;
     color: aliceblue;
-    background-color: #008000;
+    height: 1.6rem;
+    padding: 0.5rem;
+    background-color: var(--green-600);
 
-    border: 1px solid black;
 }
 
 .download>*:hover {
     cursor: pointer;
-    background-color: #006400;
+    background-color: var(--green-700);
+
 }
 
 .extension {
     display: inline;
-    background-color: #87d087;
+    background-color: var(--green-300);
     border-radius: 5px;
     padding: 2px;
 }
