@@ -24,7 +24,5 @@ export default {
 };
 </script>
 <style>
-RouterView {
-  height: 1930px;
-}
+
 </style>

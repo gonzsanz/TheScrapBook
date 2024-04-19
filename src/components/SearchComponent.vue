@@ -62,6 +62,10 @@ export default {
     align-items: center;
 }
 
+input {
+    background-color: var(--green-50);
+}
+
 .input-search {
     display: flex;
     align-items: center;
@@ -74,20 +78,19 @@ export default {
 .search {
     width: 85%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid var(--green-400);
     border-radius: 25px;
 }
 
 button {
     color: #fff;
-    /* padding: 10px 20px; */
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
     border-radius: 25px;
     width: 2.5rem;
-    height: 2rem;
+    height: 2.3rem;
     margin-left: 0.5rem;
 }
 

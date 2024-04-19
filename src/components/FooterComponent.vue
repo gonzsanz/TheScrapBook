@@ -1,18 +1,15 @@
 <template>
-    <footer class="footer">
+    <div class="footer">
         <p>© <a href="https://github.com/gonzsanz" target="_blank">gonzsanz</a></p>
-    </footer>
+    </div>
 </template>
 
-
-
-
 <style scoped>
-footer {
+.footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #006400;
+    background-color: var(--green-700);
     color: #fff;
     text-align: center;
     padding: 20px 0;

@@ -1,16 +1,19 @@
 <template>
     <div class="list-books">
+        <div v-if="showNoResults" class="no-results">
+            No se han encontrado resultados para "{{ searchQuery }}"
+        </div>
         <BookResultComponent v-for="book in paginatedFilteredBooks" :key="book.id" :id="String(book.id)"
             :title="String(book.title)" :authors="String(book.authors)" :thumbnail="String(book.thumbnail)"
             :publisher="String(book.publisher)" :publish_date="String(book.publish_date)"
             :file_info="Object(book.file_info)" />
 
         <!-- Controles de paginación -->
-        <div class="pagination">
-            <button @click="prevPage" :disabled="currentPage === 1"><i class="material-icons">arrow_back_ios</i></button>
+        <div class="pagination" v-if="books.length !== 0">
+            <Button @click="prevPage" :disabled="currentPage === 1"><i class="material-icons">arrow_back_ios</i></Button>
             <span>{{ currentPage }} de {{ totalPages }}</span>
-            <button @click="nextPage" :disabled="currentPage === totalPages"><i
-                    class="material-icons">arrow_forward_ios</i></button>
+            <Button @click="nextPage" :disabled="currentPage === totalPages"><i
+                    class="material-icons">arrow_forward_ios</i></Button>
         </div>
 
     </div>
@@ -37,7 +40,8 @@ export default {
             validExtensions: ["epub", "mobi", "pdf", "rtf"],
             books: [],
             currentPage: 1,
-            perPage: 10 // Número de libros por página
+            perPage: 10, // Número de libros por página
+            showNoResults: false
         }
     },
     methods: {
@@ -58,6 +62,9 @@ export default {
                     publisher: book.publisher,
                     publish_date: book.publish_date ? book.publish_date : 'Sin fecha',
                 }));
+                if (this.books.length === 0) {
+                    this.showNoResults = true;
+                }
             } catch (error) {
                 console.error('Error al cargar los libros:', error.message);
                 // Manejar el error según sea necesario
@@ -165,7 +172,7 @@ export default {
     background: none;
     border: none;
     outline: none;
-    color: #006400;
+    color: var(--green-600);
 }
 
 .pagination button:hover {
@@ -175,6 +182,15 @@ export default {
 
 .pagination button:disabled {
     color: #808080;
+}
+
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 </style>
 
